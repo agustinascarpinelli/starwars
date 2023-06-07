@@ -1,12 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:star_wars/models/species_model.dart';
+import 'package:star_wars/models/models.dart';
 import 'package:star_wars/services/swapi_service.dart';
-import 'package:star_wars/widgets/custom_alert.dart';
-import 'package:star_wars/widgets/custom_drawer.dart';
-
+import 'package:star_wars/widgets/widgets.dart';
 import '../bloc/bloc/swapi_bloc.dart';
 
 class SpeciesDetailsScreen extends StatelessWidget {
@@ -71,7 +69,7 @@ class SpeciesDetailsScreen extends StatelessWidget {
                       final state = swapiBloc.state;
 
                       if (state.isConnected) {
-                        final Option <Map<String, dynamic>> report =
+                        final Option<Map<String, dynamic>> report =
                             await SwapiService().createReport(species);
 
                         report.fold(
@@ -80,7 +78,8 @@ class SpeciesDetailsScreen extends StatelessWidget {
                                       context,
                                       'Error',
                                       const Icon(Icons.warning_amber_outlined),
-                                      'There was a problem with the report.Try again later', () {
+                                      'There was a problem with the report.Try again later',
+                                      () {
                                     Navigator.pop(context);
                                   })
                                 },
@@ -91,7 +90,7 @@ class SpeciesDetailsScreen extends StatelessWidget {
                                       const Icon(Icons.done),
                                       'The species ${species.name} has been successfully reported',
                                       () {
-                                    Navigator.pushNamed(context,'list');
+                                    Navigator.pushNamed(context, 'list');
                                   })
                                 });
                       } else {

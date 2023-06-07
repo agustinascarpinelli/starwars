@@ -3,9 +3,8 @@ import 'package:dartz/dartz.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:star_wars/models/planets_model.dart';
+import '../../models/models.dart';
 import 'package:star_wars/services/swapi_service.dart';
-import 'package:path_provider/path_provider.dart';
-import '../../models/species_model.dart';
 
 part 'swapi_event.dart';
 part 'swapi_state.dart';

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:star_wars/screens/background_screen.dart';
 import 'package:star_wars/screens/screens.dart';
 import 'package:path_provider/path_provider.dart' show getTemporaryDirectory;
 
@@ -16,12 +15,14 @@ void main() async{
   runApp(
     BlocProvider<SwapiBloc>(
       create: (context) => SwapiBloc(), // Asegúrate de proporcionar una instancia válida del SwapiBloc aquí
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SwapiBloc, SwapiState>(
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData.dark().copyWith(
             scaffoldBackgroundColor: Colors.transparent,
             canvasColor: Colors.transparent,
-            textTheme: GoogleFonts.orbitronTextTheme(TextTheme()),
+            textTheme: GoogleFonts.orbitronTextTheme(const TextTheme()),
           ),
           initialRoute: 'home',
           routes: {

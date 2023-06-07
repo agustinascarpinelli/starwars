@@ -1,9 +1,7 @@
-import 'package:animations/animations.dart';
-import 'package:flutter/material.dart';
-import 'package:star_wars/bloc/bloc/swapi_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
 import '../widgets/custom_drawer.dart';
-import 'screens.dart';
+import 'package:star_wars/bloc/bloc/swapi_bloc.dart';
 
 class SpeciesListScreen extends StatefulWidget {
   const SpeciesListScreen({Key? key}) : super(key: key);
@@ -16,11 +14,9 @@ class _SpeciesListScreenState extends State<SpeciesListScreen> {
   late SwapiBloc swapiBloc;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    swapiBloc=BlocProvider.of<SwapiBloc>(context);
+    swapiBloc = BlocProvider.of<SwapiBloc>(context);
     swapiBloc.add(OnGetSpecies());
-   
   }
 
   @override
@@ -43,14 +39,13 @@ class _ListViewBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SwapiBloc, SwapiState>(
       builder: (context, state) {
-
-        if (state.isLoading){
-return const Center(child: CircularProgressIndicator(color: Color(0xFFFF0000)),);
-        }
-        else if (state.error !="no error" ){
-          return _errorMsg(errorMsg:state.error!);
-        }
-      else  if (state.species != null) {
+        if (state.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFFFF0000)),
+          );
+        } else if (state.error != "no error") {
+          return _ErrorMsg(errorMsg: state.error!);
+        } else if (state.species != null) {
           return ListView.builder(
               physics: const BouncingScrollPhysics(),
               itemCount: state.species!.length,
@@ -58,7 +53,7 @@ return const Center(child: CircularProgressIndicator(color: Color(0xFFFF0000)),)
                 return ListTile(
                   selectedColor: Colors.transparent,
                   splashColor: Colors.transparent,
-                  leading: Icon(Icons.person),
+                  leading: const Icon(Icons.person),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   title: Text(
                     state.species![index].name!,
@@ -104,32 +99,35 @@ return const Center(child: CircularProgressIndicator(color: Color(0xFFFF0000)),)
   }
 }
 
-class _errorMsg extends StatelessWidget {
+class _ErrorMsg extends StatelessWidget {
   final String errorMsg;
-  const _errorMsg({
-    super.key, required this.errorMsg,
+  const _ErrorMsg({
+    super.key,
+    required this.errorMsg,
   });
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(border: Border.all(width: 2,color: const Color(0xFFFF0000))),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-     
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.warning_amber,color: Color(0xFFFF0000)),
-            ),
- 
-            Flexible(child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(errorMsg,overflow: TextOverflow.ellipsis,maxLines: 4),
-            )),
-          ],
-        )),);
+          margin: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              border: Border.all(width: 2, color: const Color(0xFFFF0000))),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.warning_amber, color: Color(0xFFFF0000)),
+              ),
+              Flexible(
+                  child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(errorMsg,
+                    overflow: TextOverflow.ellipsis, maxLines: 4),
+              )),
+            ],
+          )),
+    );
   }
 }
