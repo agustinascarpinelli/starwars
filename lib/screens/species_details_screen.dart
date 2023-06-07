@@ -1,4 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_wars/models/species_model.dart';
@@ -70,27 +71,29 @@ class SpeciesDetailsScreen extends StatelessWidget {
                       final state = swapiBloc.state;
 
                       if (state.isConnected) {
-                        try {
-                          SwapiService().createReport(species);
+                        final Option <Map<String, dynamic>> report =
+                            await SwapiService().createReport(species);
 
-                          customAlert(
-                              context,
-                              'Report succeed',
-                              const Icon(Icons.done),
-                              'The species ${species.name} has been successfully reported',
-                              () {
-                            Navigator.pop(context);
-                          });
-                        } catch (e) {
-                          final error = e.toString();
-                          customAlert(
-                              context,
-                              'Error',
-                              const Icon(Icons.warning_amber_outlined),
-                              error, () {
-                            Navigator.pop(context);
-                          });
-                        }
+                        report.fold(
+                            () => {
+                                  customAlert(
+                                      context,
+                                      'Error',
+                                      const Icon(Icons.warning_amber_outlined),
+                                      'There was a problem with the report.Try again later', () {
+                                    Navigator.pop(context);
+                                  })
+                                },
+                            (r) => {
+                                  customAlert(
+                                      context,
+                                      'Report succeed',
+                                      const Icon(Icons.done),
+                                      'The species ${species.name} has been successfully reported',
+                                      () {
+                                    Navigator.pushNamed(context,'list');
+                                  })
+                                });
                       } else {
                         customAlert(
                             context,

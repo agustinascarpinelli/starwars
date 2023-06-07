@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:star_wars/models/planets_model.dart';
@@ -9,38 +10,35 @@ import '../../models/species_model.dart';
 part 'swapi_event.dart';
 part 'swapi_state.dart';
 
-class SwapiBloc extends  HydratedBloc<SwapiEvent, SwapiState> {
-
+class SwapiBloc extends HydratedBloc<SwapiEvent, SwapiState> {
   SwapiBloc() : super(SwapiState(isConnected: false)) {
-    
     on<OnGetSpecies>((event, emit) async {
       emit(state.copyWith(isLoading: true));
 
-      if (state.isConnected ) {
-        try {
-          final species = await SwapiService().getSpecies();
-          final speciesWithPlanet = await getPlanet(species);
-          emit(state.copyWith(species: speciesWithPlanet, isLoading: false,error:"no error"));
-        } catch (e) {
-          final err = e.toString();
-          emit(state.copyWith(error: err, isLoading: false));
-        } 
+      if (state.isConnected) {
+        final Either<String, List<Species>> species =
+            await SwapiService().getSpecies();
+
+        await species
+            .fold((l) async => emit(state.copyWith(error: l, isLoading: false)),
+                (r) async {
+          final speciesWithPlanet = await getPlanet(r);
+          emit(state.copyWith(
+              species: speciesWithPlanet, isLoading: false, error: "no error"));
+        });
       } else if (state.species != null) {
-        emit(state.copyWith(isLoading: false, species: state.species,error: "no error"));
+        emit(state.copyWith(
+            isLoading: false, species: state.species, error: "no error"));
       } else {
-        emit(state.copyWith(isLoading: false, error: 'Please connect to the internet for the first time'));
+        emit(state.copyWith(
+            isLoading: false,
+            error: 'Please connect to the internet for the first time'));
       }
-        
-           
-      
     });
 
     on<OnChangeConnectivity>((event, emit) async {
       emit(state.copyWith(isConnected: event.connect));
     });
- 
-
- 
   }
 
   Future<List<Species>> getPlanet(List<Species> species) async {
@@ -48,9 +46,12 @@ class SwapiBloc extends  HydratedBloc<SwapiEvent, SwapiState> {
         species.map<Future<Species>>((element) async {
       if (element.homeworld != null) {
         final url = element.homeworld!;
-        final PlanetResponse planet = await SwapiService().getPlanet(url);
-
-        return element.copyWith(homeworld: planet.name);
+        final Either<String, PlanetResponse> planet =
+            await SwapiService().getPlanet(url);
+        return planet.fold(
+          (l) => element.copyWith(homeworld: 'Not Found'),
+          (r) => element.copyWith(homeworld: r.name),
+        );
       } else {
         return element.copyWith(homeworld: 'Not found');
       }
@@ -60,7 +61,6 @@ class SwapiBloc extends  HydratedBloc<SwapiEvent, SwapiState> {
 
     return updatedSpeciesList;
   }
-
 
   @override
   SwapiState? fromJson(Map<String, dynamic> json) {
@@ -80,4 +80,3 @@ class SwapiBloc extends  HydratedBloc<SwapiEvent, SwapiState> {
     }
   }
 }
-
