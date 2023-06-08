@@ -58,7 +58,6 @@ flutter:
   assets:
     - assets/images/background.jpg
     - assets/images/logo_app.png
-    - assets/fonts/Orbitron/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see
