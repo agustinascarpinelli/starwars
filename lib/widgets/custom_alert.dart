@@ -37,7 +37,7 @@ customAlert(
                 elevation: 5,
                 child: const Text(
                   'Cancel',
-                  style: TextStyle(fontFamily: 'Poppins'),
+                 
                 ),
               ),
               const SizedBox(
@@ -50,7 +50,7 @@ customAlert(
                 elevation: 5,
                 child: const Text(
                   'Ok',
-                  style: TextStyle(fontFamily: 'Poppins'),
+                 
                 ),
               ),
             ]),
@@ -73,7 +73,6 @@ customAlert(
               subtitle,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontFamily: 'Poppins',
                 color: Color(0xFFFFFFFF),
               ),
             ),
@@ -83,7 +82,6 @@ customAlert(
                 child: const Text(
                   'Cancel',
                   style: TextStyle(
-                    fontFamily: 'Poppins',
                     color: Color(0xFF757575),
                   ),
                 ),
@@ -95,7 +93,6 @@ customAlert(
                   child: const Text(
                     'Ok',
                     style: TextStyle(
-                      fontFamily: 'Poppins',
                       color: Color(0xFFFF0000),
                     ),
                   ))
